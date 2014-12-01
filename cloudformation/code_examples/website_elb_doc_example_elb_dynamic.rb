@@ -1,7 +1,5 @@
 SparkleFormation.new('website').load(:base).overrides do
 
-  set!('AWSTemplateFormatVersion', '2010-09-09')
-
   description 'Supercool Website'
 
   parameters.web_nodes do
@@ -45,5 +43,5 @@ SparkleFormation.new('website').load(:base).overrides do
     end
   end
 
-  dynamic!(:elb, 'website', :load_balancer_port => 8080, :instance_port => 8080)
+  dynamic!(:elb, 'website')
 end
