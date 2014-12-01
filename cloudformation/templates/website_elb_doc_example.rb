@@ -45,6 +45,7 @@ SparkleFormation.new('website') do
   resources.website_launch_config do
     type 'AWS::AutoScaling::LaunchConfiguration'
     properties do
+      key_name 'sparklesinfrakey'
       image_id 'ami-59a4a230'
       instance_type 'm3.medium'
     end
