@@ -45,7 +45,7 @@ SparkleFormation.new('website') do
   resources.website_launch_config do
     type 'AWS::AutoScaling::LaunchConfiguration'
     properties do
-      image_id 'ami-123456'
+      image_id 'ami-59a4a230'
       instance_type 'm3.medium'
     end
   end
@@ -66,8 +66,8 @@ SparkleFormation.new('website') do
         target 'HTTP:80/'
         healthy_threshold '3'
         unhealthy_threshold '3'
-        interval '5'
-        timeout '15'
+        interval '10'
+        timeout '8'
       end
     end
   end
