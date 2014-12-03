@@ -1,5 +1,3 @@
-
-
 SparkleFormation.new('db_app').load(:base).overrides do
 
   description 'Database application'
@@ -9,13 +7,8 @@ SparkleFormation.new('db_app').load(:base).overrides do
   app_port = '80'
 
   # Create the security group resources
-  dynamic!(:security_group, 'db',
-           :security_group_ingress => [ ref!(:db_app_security_group_ingress) ]
-  )
-
-  dynamic!(:security_group, 'app',
-           :security_group_ingress => [ ref!(:app_app_security_group_ingress) ]
-  )
+  dynamic!(:security_group, 'db')
+  dynamic!(:security_group, 'app')
 
   # Create the security group ingress rules
   # This rule to allow access to the db sg from the app sg
@@ -23,6 +16,7 @@ SparkleFormation.new('db_app').load(:base).overrides do
            :from_port => app_port,
            :to_port => app_port,
            :ip_protocol => app_protocol,
+           :group_name => ref!(:db_security_group),
            :source_security_group_name => ref!(:app_security_group)
   )
 
@@ -32,6 +26,7 @@ SparkleFormation.new('db_app').load(:base).overrides do
            :from_port => app_port,
            :to_port => app_port,
            :ip_protocol => app_protocol,
+           :group_name => ref!(:app_security_group),
            :source_security_group_name => ref!(:app_security_group)
   )     
 
