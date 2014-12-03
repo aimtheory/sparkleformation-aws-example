@@ -33,12 +33,12 @@ SparkleFormation.dynamic(:launch_configuration) do |_name, _config={}|
   end
 
   outputs("#{_name}_image_id".to_sym) do
-    description 'The image ID for the #{ ref!(lc_name) } LaunchConfiguration resource'
+    description "The image ID for the #{ ref!(lc_name) } LaunchConfiguration resource"
     value _config[:image_id]
   end
 
   outputs("#{_name}_instance_type".to_sym) do
-    description 'The instance type for the #{ ref!(lc_name) } LaunchConfiguration resource'
+    description "The instance type for the #{ ref!(lc_name) } LaunchConfiguration resource"
     value _config[:instance_type]
   end
 
@@ -48,7 +48,7 @@ SparkleFormation.dynamic(:launch_configuration) do |_name, _config={}|
   end
 
   outputs("#{_name}_security_groups".to_sym) do
-    description 'The list of security groups for the #{ ref!(lc_name) } LaunchConfiguration resource'
+    description "The list of security groups for the #{ ref!(lc_name) } LaunchConfiguration resource"
     value _config[:security_groups]
   end
 

@@ -1,11 +1,10 @@
 # Dynamic: security_group
 # Description: Creates an AWS::EC2::SecurityGroup resource
-# _config Inputs:
-#   :security_group_ingress as array of ref!s 
+# Config:
+#   none
 #
 # Outputs:
 #   #{_name}_security_group - The created name of the sec group
-#   #{_name}_security_group_ingress - The array of sec group ingress rules
 
 SparkleFormation.dynamic(:security_group) do |_name, _config={}|
 
@@ -15,7 +14,6 @@ SparkleFormation.dynamic(:security_group) do |_name, _config={}|
     type 'AWS::EC2::SecurityGroup'
     properties do
       group_description "Security group for #{_name}"
-      security_group_ingress _config[:security_group_ingress] || []
     end
   end
 
