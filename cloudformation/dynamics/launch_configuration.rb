@@ -21,10 +21,12 @@ SparkleFormation.dynamic(:launch_configuration) do |_name, _config={}|
   resources(lc_name) do
     type 'AWS::AutoScaling::LaunchConfiguration'
     registry!(:apt_get_update, "#{_name}_launch_configuration")
-    image_id _config[:image_id]
-    instance_type _config[:instance_type]
-    key_name _config[:key_name]
-    security_groups _config[:security_groups] || []
+    properties do
+      image_id _config[:image_id]
+      instance_type _config[:instance_type]
+      key_name _config[:key_name]
+      security_groups _config[:security_groups] || []
+    end
   end
 
   outputs(lc_name) do
@@ -49,7 +51,7 @@ SparkleFormation.dynamic(:launch_configuration) do |_name, _config={}|
 
   outputs("#{_name}_security_groups".to_sym) do
     description "The list of security groups for the #{ ref!(lc_name) } LaunchConfiguration resource"
-    value _config[:security_groups]
+    value _config[:security_groups].join(',')
   end
 
 end

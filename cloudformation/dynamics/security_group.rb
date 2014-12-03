@@ -22,10 +22,4 @@ SparkleFormation.dynamic(:security_group) do |_name, _config={}|
     value ref!("#{_name}_security_group".to_sym)
   end
 
-  outputs("#{_name}_security_group_ingress".to_sym) do
-    description 'List of security group ingress rules for the security group'
-    value _config[:security_group_ingress]
-  end
-
 end
-

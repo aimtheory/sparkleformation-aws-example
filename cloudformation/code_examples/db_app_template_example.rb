@@ -3,7 +3,7 @@ SparkleFormation.new('db_app').load(:base).overrides do
   description 'Database application'
 
   # Setup reusable values
-  app_protocol = 'HTTP'
+  app_protocol = 'tcp'
   app_port = '80'
 
   # Create the security group resources
