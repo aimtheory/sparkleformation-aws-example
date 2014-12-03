@@ -30,15 +30,6 @@ SparkleFormation.new('db_app').load(:base).overrides do
            :source_security_group_name => ref!(:app_security_group)
   )     
 
-  # Create the load balancer resource
-  dynamic!(:load_balancer, 'db_app',
-           :balancer_http => app_port,
-           :balancer_protocol => app_protocol,
-           :instance_http => app_port,
-           :instance_protocol => app_protocol,
-           :security_groups => ref!(:app_security_group)
-  )
-
   dynamic!(:launch_configuration, 'db',
            :image_id => 'ami-59a4a230',
            :instance_type => 'm1.small',
