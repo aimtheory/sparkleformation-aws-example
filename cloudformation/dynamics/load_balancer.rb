@@ -1,3 +1,17 @@
+# Dynamic: load_balancer
+# Description: Creates an AWS::ElasticLoadBalancing::LoadBalancer
+# resource
+# Inputs: _config[:security_groups] as array
+#         _config[:load_balancer_port] as integer
+#         _config[:protocol] as string
+#         _config[:instance_port] as integer
+#         _config[:instance_protocol] as string
+#         _config[:target] as string
+#         _config[:healthy_threshold] as integer
+#         _config[:unhealthy_threshold] as integer
+#         _config[:interval] as integer
+#         _config[:timeout] as integer
+
 SparkleFormation.dynamic(:load_balancer) do |_name, _config={}|
     resources("#{_name}_load_balancer".to_sym) do
       type 'AWS::ElasticLoadBalancing::LoadBalancer'
