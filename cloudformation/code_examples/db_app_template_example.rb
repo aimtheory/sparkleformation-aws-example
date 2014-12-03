@@ -39,7 +39,6 @@ SparkleFormation.new('db_app').load(:base).overrides do
            :security_groups => ref!(:app_security_group)
   )
 
-  # Create the AutoScaling LaunchConfiguration for the db asg
   dynamic!(:launch_configuration, 'db',
            :image_id => 'ami-59a4a230',
            :instance_type => 'm1.small',
