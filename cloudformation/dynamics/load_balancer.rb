@@ -18,13 +18,12 @@ SparkleFormation.dynamic(:load_balancer) do |_name, _config={}|
       type 'AWS::ElasticLoadBalancing::LoadBalancer'
       properties do
         availability_zones._set('Fn::GetAZs', '')
-        security_groups _config[:security_groups] || [] 
         listeners _array(
           -> {
             load_balancer_port _config[:load_balancer_port] || '80'
-            protocol _config[:protocol] || 'HTTP'
+            protocol _config[:protocol] || 'tcp'
             instance_port _config[:instance_port] || '80'
-            instance_protocol _config[:instance_protocol] || 'HTTP'
+            instance_protocol _config[:instance_protocol] || 'tcp'
           }
         )
         health_check do
