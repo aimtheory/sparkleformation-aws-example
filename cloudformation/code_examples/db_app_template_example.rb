@@ -6,6 +6,9 @@ SparkleFormation.new('db_app').load(:base).overrides do
   app_protocol = 'tcp'
   app_port = '80'
 
+  db_protocol = 'tcp'
+  db_port = '3306'
+
   # Create the security group resources
   dynamic!(:security_group, 'db')
   dynamic!(:security_group, 'app')
@@ -13,9 +16,9 @@ SparkleFormation.new('db_app').load(:base).overrides do
   # Create the security group ingress rules
   # This rule to allow access to the db sg from the app sg
   dynamic!(:security_group_ingress, 'db_app',
-           :from_port => app_port,
-           :to_port => app_port,
-           :ip_protocol => app_protocol,
+           :from_port => db_port,
+           :to_port => db_port,
+           :ip_protocol => db_protocol,
            :group_name => ref!(:db_security_group),
            :source_security_group_name => ref!(:app_security_group)
   )
@@ -37,6 +40,11 @@ SparkleFormation.new('db_app').load(:base).overrides do
            :security_groups => [ ref!(:db_security_group) ]
   )
 
+  # Install MySQL in db AutoScalingGroup
+  resources(:db_launch_configuration) do
+    registry!(:mysql_install)
+  end
+
   # Create the AutoScaling LaunchConfiguration for the app asg
   dynamic!(:launch_configuration, 'app',
            :image_id => 'ami-59a4a230',
@@ -45,6 +53,11 @@ SparkleFormation.new('db_app').load(:base).overrides do
            :security_groups => [ ref!(:app_security_group) ]
   )
 
+  # Instal nginx in app AutoScalingGroup
+  resources(:app_launch_configuration) do
+    registry!(:nginx_install)
+  end
+ 
   # Create the db asg
   dynamic!(:auto_scaling_group, 'db',
            :launch_configuration_name => ref!(:app_launch_configuration),
