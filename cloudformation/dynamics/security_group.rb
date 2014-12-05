@@ -8,10 +8,8 @@
 
 SparkleFormation.dynamic(:security_group) do |_name, _config={}|
 
-  sg_name = "#{_name}_security_group".to_sym
-
-  # Create the security group
-  resources(sg_name) do
+  # Create the SecurityGroup resource
+  resources("#{_name}_security_group".to_sym) do
     type 'AWS::EC2::SecurityGroup'
     properties do
       group_description "Security group for #{_name}"
@@ -28,11 +26,6 @@ SparkleFormation.dynamic(:security_group) do |_name, _config={}|
       group_name ref!(sg_name)
       cidr_ip '0.0.0.0/0'
     end
-  end
-
-  outputs(sg_name) do
-    description 'Created security group'
-    value sg_name
   end
 
 end
