@@ -41,12 +41,12 @@ SparkleFormation.dynamic(:auto_scaling_group) do |_name, _config={}|
 
   outputs("#{_name}_auto_scaling_group_max_size".to_sym) do
     description "The max size for the #{ asg_name } AutoScalingGroup"
-    value _config[:max_size]
+    value ref!("#{_name}_auto_scaling_group_max_size".to_sym)
   end
 
   outputs("#{_name}_auto_scaling_group_min_size".to_sym) do
     description "The min size for the #{ asg_name } AutoScalingGroup"
-    value _config[:min_size]
+    value ref!("#{_name}_auto_scaling_group_max_size".to_sym)
   end
 
 end

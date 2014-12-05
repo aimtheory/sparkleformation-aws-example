@@ -24,25 +24,25 @@ SparkleFormation.dynamic(:launch_configuration) do |_name, _config={}|
 
   lc_name = "#{_name}_launch_configuration".to_sym
 
-  parameters("#{_name}_launch_configuration_image_id") do
+  parameters("#{_name}_launch_configuration_image_id".to_sym) do
     type 'String'
     description "ImageID for #{ lc_name }"
     default _config[:image_id] || 'ami-59a4a230'
   end
 
-  parameters("#{_name}_launch_configuration_instance_type") do
+  parameters("#{_name}_launch_configuration_instance_type".to_sym) do
     type 'String'
     description "InstanceType for #{ lc_name }"
     default _config[:instance_type] || 'm1.small'
   end 
 
-  parameters("#{_name}_launch_configuration_key_name") do
+  parameters("#{_name}_launch_configuration_key_name".to_sym) do
     type 'String'
     description "KeyName for #{ lc_name }"
     default _config[:key_name] || 'sparkleinfrakey'
   end
 
-  parameters("#{_name}_launch_configuration_security_groups") do
+  parameters("#{_name}_launch_configuration_security_groups".to_sym) do
     type 'CommaDelimitedList'
     description "SecurityGroups for #{ lc_name }"
     default _config[:security_groups] || 'default'
@@ -60,22 +60,22 @@ SparkleFormation.dynamic(:launch_configuration) do |_name, _config={}|
 
   outputs("#{_name}_launch_configuration_image_id".to_sym) do
     description "The ImageID for the #{ lc_name } LaunchConfiguration resource"
-    value _config[:image_id]
+    value ref!("#{_name}_launch_configuration_image_id".to_sym)
   end
 
   outputs("#{_name}_launch_configuration_instance_type".to_sym) do
     description "The InstanceType for the #{ lc_name } LaunchConfiguration resource"
-    value _config[:instance_type]
+    value ref!("#{_name}_launch_configuration_instance_type".to_sym)
   end
 
   outputs("#{_name}_launch_configuration_key_name".to_sym) do
     description 'The KeyName for the #{ lc_name } LaunchConfiguration resource'
-    value _config[:key_name]
+    value ref!("#{_name}_launch_configuration_key_name".to_sym)
   end
 
   outputs("#{_name}_launch_configuration_security_groups".to_sym) do
     description "The SecurityGroups for the #{ lc_name } LaunchConfiguration resource"
-    value _config[:security_groups].join(',')
+    value ref!("#{_name}_launch_configuration_security_groups".to_sym)
   end
 
 end

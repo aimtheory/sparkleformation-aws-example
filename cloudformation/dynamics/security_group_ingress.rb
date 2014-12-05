@@ -21,7 +21,6 @@
 #   #{_name}_security_group_ingress_group_name as string
 #   #{_name}_security_group_ingress_source_security_group_name as
 # string
-
 SparkleFormation.dynamic(:security_group_ingress) do |_name, _config={}|
   
   parameters("#{_name}_security_group_ingress_from_port".to_sym) do
@@ -57,37 +56,37 @@ SparkleFormation.dynamic(:security_group_ingress) do |_name, _config={}|
   resources("#{_name}_security_group_ingress".to_sym) do
     type 'AWS::EC2::SecurityGroupIngress'
     properties do
-      from_port _config[:from_port]
-      to_port _config[:to_port]
-      ip_protocol _config[:ip_protocol]
-      group_name _config[:group_name]
-      source_security_group_name _config[:source_security_group_name]
+      from_port ref!("#{_name}_security_group_ingress_from_port".to_sym)
+      to_port ref!("#{_name}_security_group_ingress_to_port".to_sym)
+      ip_protocol ref!("#{_name}_security_group_ingress_ip_protocol".to_sym)
+      group_name ref!("#{_name}_security_group_ingress_group_name".to_sym)
+      source_security_group_name ref!("#{_name}_security_group_ingress_source_security_group_name".to_sym)
     end
   end
 
   outputs("#{_name}_security_group_ingress_from_port".to_sym) do
     description "The FromPort for the #{_name} SecurityGroupIngress rule"
-    value ref!("#{_name}_from_port".to_sym)
+    value ref!("#{_name}_security_group_ingress_from_port".to_sym)
   end
 
   outputs("#{_name}_security_group_ingress_to_port".to_sym) do
     description "The ToPort for the #{_name} SecurityGroupIngress rule"
-    value ref!("#{_name}_to_port".to_sym)
+    value ref!("#{_name}_security_group_ingress_to_port".to_sym)
   end
 
   outputs("#{_name}_security_group_ingress_ip_protocol".to_sym) do
     description "The IpProtocol for the #{_name} SecurityGroupIngress rule"
-    value ref!("#{_name}_ip_protocol".to_sym)
+    value ref!("#{_name}_security_group_ingress_ip_protocol".to_sym)
   end
 
   outputs("#{_name}_security_group_ingress_group_name".to_sym) do
     description "The GroupName for the #{_name} SecurityGroupIngress rule"
-    value ref!("#{_name}_group_name".to_sym)
+    value ref!("#{_name}_security_group_ingress_group_name".to_sym)
   end
 
   outputs("#{_name}_security_group_ingress_source_security_group_name".to_sym) do
     description "The SourceSecurityGroupName for the #{_name} SecurityGroupIngress rule"
-    value ref!("#{_name}_source_security_group_name".to_sym)
+    value ref!("#{_name}_security_group_ingress_source_security_group_name".to_sym)
   end
 
 end

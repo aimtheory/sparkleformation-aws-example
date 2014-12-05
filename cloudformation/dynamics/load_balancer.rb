@@ -107,18 +107,18 @@ SparkleFormation.dynamic(:load_balancer) do |_name, _config={}|
       availability_zones._set('Fn::GetAZs', '')
       listeners _array(
         -> {
-          load_balancer_port _config[:port] || '80'
-          protocol _config[:protocol] || 'tcp'
-          instance_port _config[:instance_port] || '80'
-          instance_protocol _config[:instance_protocol] || 'tcp'
+          load_balancer_port _config[:port] || ref!("#{_name}_load_balancer_port".to_sym)
+          protocol _config[:protocol] || ref!("#{_name}_load_balancer_protocol".to_sym)
+          instance_port _config[:instance_port] || ref!("#{_name}_load_balancer_instance_port".to_sym)
+          instance_protocol _config[:instance_protocol] || ref!("#{_name}_load_balancer_instance_protocol".to_sym)
         }
       )
       health_check do
-        target _config[:target] || 'HTTP:80/'
-        healthy_threshold _config[:healthy_threshold] || '3'
-        unhealthy_threshold _config[:unhealthy_threshold] || '3'
-        interval _config[:interval] || '10'
-        timeout _config[:timeout] || '8'
+        target _config[:target] || ref!("#{_name}_load_balancer_target".to_sym)
+        healthy_threshold _config[:healthy_threshold] || ref!("#{_name}_load_balancer_healthy_threshold".to_sym)
+        unhealthy_threshold _config[:unhealthy_threshold] || ref!("#{_name}_load_balancer_unhealthy_threshold".to_sym)
+        interval _config[:interval] || ref!("#{_name}_load_balancer_interval".to_sym)
+        timeout _config[:timeout] || ref!("#{_name}_load_balancer_timeout".to_sym)
       end
     end
   end
