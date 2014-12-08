@@ -3,39 +3,39 @@
 # resource
 # Config:
 #   :security_groups as array
-#   :port as integer
+#   :port as number
 #   :protocol as string
-#   :instance_port as integer
+#   :instance_port as number 
 #   :instance_protocol as string
 #   :target as string
-#   :healthy_threshold as integer
-#   :unhealthy_threshold as integer
-#   :interval as integer
-#   :timeout as integer
+#   :healthy_threshold as number
+#   :unhealthy_threshold as number
+#   :interval as number
+#   :timeout as number
 #
 # Parameters:   
 #   #{_name}_load_balancer_security_groups as comma delimited list
-#   #{_name}_load_balancer_port as integer
+#   #{_name}_load_balancer_port as number
 #   #{_name}_load_balancer_protocol as string
-#   #{_name}_load_balancer_instance_port as integer
+#   #{_name}_load_balancer_instance_port as number
 #   #{_name}_load_balancer_instance_protocol as string
 #   #{_name}_load_balancer_target as string
-#   #{_name}_load_balancer_healthy_threshold as integer
-#   #{_name}_load_balancer_unhealthy_threshold as integer
-#   #{_name}_load_balancer_interval as integer
-#   #{_name}_load_balancer_timeout as integer
+#   #{_name}_load_balancer_healthy_threshold as number
+#   #{_name}_load_balancer_unhealthy_threshold as number
+#   #{_name}_load_balancer_interval as number
+#   #{_name}_load_balancer_timeout as number
 #
 # Outputs: (as ref!s to the parameters' user defined values)   
 #   #{_name}_load_balancer_security_groups as comma delimited list
-#   #{_name}_load_balancer_port as integer
+#   #{_name}_load_balancer_port as number
 #   #{_name}_load_balancer_protocol as string
-#   #{_name}_load_balancer_instance_port as integer
+#   #{_name}_load_balancer_instance_port as number
 #   #{_name}_load_balancer_instance_protocol as string
 #   #{_name}_load_balancer_target as string
-#   #{_name}_load_balancer_healthy_threshold as integer
-#   #{_name}_load_balancer_unhealthy_threshold as integer
-#   #{_name}_load_balancer_interval as integer
-#   #{_name}_load_balancer_timeout as integer
+#   #{_name}_load_balancer_healthy_threshold as number
+#   #{_name}_load_balancer_unhealthy_threshold as number
+#   #{_name}_load_balancer_interval as number
+#   #{_name}_load_balancer_timeout as number
 
 SparkleFormation.dynamic(:load_balancer) do |_name, _config={}|
 
@@ -48,7 +48,7 @@ SparkleFormation.dynamic(:load_balancer) do |_name, _config={}|
   end
 
   parameters("#{_name}_load_balancer_port".to_sym) do
-    type 'Integer'
+    type 'Number'
     description 'Listening port for the LoadBalancer resource'
     default _config[:port] || '80'
   end
@@ -60,7 +60,7 @@ SparkleFormation.dynamic(:load_balancer) do |_name, _config={}|
   end
 
   parameters("#{_name}_load_balancer_instance_port".to_sym) do
-    type 'Integer'
+    type 'Number'
     description 'InstancePort for the listener of the LoadBalancer resource'
     default _config[:instance_port] || '80'
   end
@@ -78,25 +78,25 @@ SparkleFormation.dynamic(:load_balancer) do |_name, _config={}|
   end
 
   parameters("#{_name}_load_balancer_healthy_threshold".to_sym) do
-    type 'Integer'
+    type 'Number'
     description 'HealthCheck HealthyThreshold for the LoadBalancer resource'
     default _config[:healthy_threshold] || '3'
   end
 
   parameters("#{_name}_load_balancer_unhealthy_threshold".to_sym) do
-    type 'Integer'
+    type 'Number'
     description 'HealthCheck UnHealthyThreshold for the LoadBalancer resource'
     default _config[:unhealthy_threshold] || '3'
   end
 
   parameters("#{_name}_load_balancer_interval".to_sym) do
-    type 'Integer'
+    type 'Number'
     description 'HealthCheck Interval for the LoadBalancer resource'
     default _config[:interval] || '10'
   end
 
   parameters("#{_name}_load_balancer_timeout".to_sym) do
-    type 'Integer'
+    type 'Number'
     description 'HealthCheck Timeout for the LoadBalancer resource'
     default _config[:timeout] || '8'
   end
@@ -121,11 +121,6 @@ SparkleFormation.dynamic(:load_balancer) do |_name, _config={}|
         timeout _config[:timeout] || ref!("#{_name}_load_balancer_timeout".to_sym)
       end
     end
-  end
-
-  outputs("#{_name}_load_balancer_security_groups".to_sym) do
-    description 'List of SecurityGroups for the LoadBalancer resource'
-    value ref!("#{_name}_load_balancer_security_groups".to_sym)
   end
 
   outputs("#{_name}_load_balancer_port".to_sym) do
