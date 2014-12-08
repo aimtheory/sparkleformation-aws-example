@@ -51,19 +51,23 @@ SparkleFormation.dynamic(:launch_configuration) do |_name, _config={}|
       security_groups _config[:security_groups] || []
       user_data base64!(
                         join!(
-                              '#!/bin/bash\n',
-                              'cfn-init -v --region ',
+                              "#!/bin/bash\n",
+                              "apt-get -y install python-setuptools\n",
+                              "easy_install https://s3.amazonaws.com/cloudformation-examples/aws-cfn-bootstrap-latest.tar.gz\n",
+                              "cfn-init -v --region ",
                               ref!('AWS::Region'),
-                              ' -s ',
+                              " -s ",
                               ref!('AWS::StackName'),
-                              " -r #{_process_key(_config[:launch_config_name])} --access-key ",
-                              ref!(:cfn_keys),
-                              ' --secret-key ',
-                              attr!(:cfn_keys, :secret_access_key),
+                              " -r #{ _process_key(lc_name) }",
+                              # " --access-key ",
+                              # ref!(:cfn_keys),
+                              # " --secret-key ",
+                              # attr!(:cfn_keys, :secret_access_key),
                               "\n",
                               "cfn-signal -e $? --stack ",
                               ref!("AWS::StackName"),
-                              " --resource AutoScalingGroup\n"
+                              " --resource ",
+                              _process_key(lc_name)
                               )
                         )
     end
