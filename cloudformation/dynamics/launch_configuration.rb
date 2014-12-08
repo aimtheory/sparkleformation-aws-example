@@ -42,19 +42,30 @@ SparkleFormation.dynamic(:launch_configuration) do |_name, _config={}|
     default _config[:key_name] || 'sparkleinfrakey'
   end
 
-  parameters("#{_name}_launch_configuration_security_groups".to_sym) do
-    type 'CommaDelimitedList'
-    description "SecurityGroups for #{ lc_name }"
-    default _config[:security_groups] || 'default'
-  end
-
   resources(lc_name) do
     type 'AWS::AutoScaling::LaunchConfiguration'
     properties do
-      image_id _config[:image_id]
-      instance_type _config[:instance_type]
-      key_name _config[:key_name]
+      image_id ref!("#{_name}_launch_configuration_image_id".to_sym)
+      instance_type ref!("#{_name}_launch_configuration_instance_type".to_sym)
+      key_name ref!("#{_name}_launch_configuration_key_name".to_sym)
       security_groups _config[:security_groups] || []
+      user_data base64!(
+                        join!(
+                              '#!/bin/bash\n',
+                              'cfn-init -v --region ',
+                              ref!('AWS::Region'),
+                              ' -s ',
+                              ref!('AWS::StackName'),
+                              " -r #{_process_key(_config[:launch_config_name])} --access-key ",
+                              ref!(:cfn_keys),
+                              ' --secret-key ',
+                              attr!(:cfn_keys, :secret_access_key),
+                              "\n",
+                              "cfn-signal -e $? --stack ",
+                              ref!("AWS::StackName"),
+                              " --resource AutoScalingGroup\n"
+                              )
+                        )
     end
   end
 
@@ -75,7 +86,7 @@ SparkleFormation.dynamic(:launch_configuration) do |_name, _config={}|
 
   outputs("#{_name}_launch_configuration_security_groups".to_sym) do
     description "The SecurityGroups for the #{ lc_name } LaunchConfiguration resource"
-    value ref!("#{_name}_launch_configuration_security_groups".to_sym)
+    value _config[:security_groups].join(",")
   end
 
 end
