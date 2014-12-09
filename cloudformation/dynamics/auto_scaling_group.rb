@@ -56,8 +56,8 @@ SparkleFormation.dynamic(:auto_scaling_group) do |_name, _config={}|
     end
     creation_policy do
       resource_signal do
-        count 2
-        timeout "PT5M"
+        count 1
+        timeout "PT10M"
       end
     end
   end
