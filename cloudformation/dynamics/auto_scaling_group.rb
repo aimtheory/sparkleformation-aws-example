@@ -22,7 +22,7 @@ SparkleFormation.dynamic(:auto_scaling_group) do |_name, _config={}|
 
   # Add a load balancer using --apply-stack and output from a
   # load_balancer stack
-  parameters("#{_name}_auto_scaling_group_load_balancer_resource_name".to_sym) do
+  parameters("#{_name}_load_balancer_name".to_sym) do
     type 'String'
     description 'The load balancer resource name to associate this AutoScalingGroup with'
     default nil
@@ -36,7 +36,7 @@ SparkleFormation.dynamic(:auto_scaling_group) do |_name, _config={}|
       max_size ref!("#{_name}_auto_scaling_group_size".to_sym)
       min_size ref!("#{_name}_auto_scaling_group_size".to_sym)
       desired_capacity ref!("#{_name}_auto_scaling_group_size".to_sym)
-      load_balancer_names ref!("#{_name}_auto_scaling_group_load_balancer_resource_name".to_sym).join(",")
+      load_balancer_names ref!("#{_name}_load_balancer_name".to_sym).join(",")
     end
     creation_policy do
       resource_signal do
