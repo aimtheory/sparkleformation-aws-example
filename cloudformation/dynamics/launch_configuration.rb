@@ -67,7 +67,7 @@ SparkleFormation.dynamic(:launch_configuration) do |_name, _config={}|
                               "cfn-signal -e $? --stack ",
                               ref!("AWS::StackName"),
                               " --resource ",
-                              _process_key(lc_name)
+                              _process_key("#{_name}_auto_scaling_group")
                               )
                         )
     end
