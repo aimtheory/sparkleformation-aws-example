@@ -23,16 +23,10 @@
 # string
 SparkleFormation.dynamic(:security_group_ingress) do |_name, _config={}|
   
-  parameters("#{_name}_security_group_ingress_from_port".to_sym) do
+  parameters("#{_name}_security_group_ingress_port".to_sym) do
     type 'Number'
-    description "The FromPort for the #{_name} SecurityGroupIngress rule"
-    default _config[:from_port] || '22'
-  end
-
-  parameters("#{_name}_security_group_ingress_to_port".to_sym) do
-    type 'Number'
-    description "The ToPort for the #{_name} SecurityGroupIngress rule"
-    default _config[:to_port] || '22'
+    description "The port number for the #{_name} SecurityGroupIngress rule"
+    default _config[:port] || '22'
   end
 
   parameters("#{_name}_security_group_ingress_ip_protocol".to_sym) do

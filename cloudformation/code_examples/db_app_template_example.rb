@@ -16,8 +16,7 @@ SparkleFormation.new('db_app').load(:base).overrides do
   # Create the security group ingress rules
   # This rule to allow access to the db sg from the app sg
   dynamic!(:security_group_ingress, 'db_app',
-           :from_port => db_port,
-           :to_port => db_port,
+           :port => db_port,
            :ip_protocol => db_protocol,
            :group_name => ref!(:db_security_group),
            :source_security_group_name => ref!(:app_security_group)
@@ -26,8 +25,7 @@ SparkleFormation.new('db_app').load(:base).overrides do
   # This rulle to allow access to the app nodes from the elb (in the
   # app sg) or from other app nodes
   dynamic!(:security_group_ingress, 'app_app',
-           :from_port => app_port,
-           :to_port => app_port,
+           :port => app_port,
            :ip_protocol => app_protocol,
            :group_name => ref!(:app_security_group),
            :source_security_group_name => ref!(:app_security_group)
