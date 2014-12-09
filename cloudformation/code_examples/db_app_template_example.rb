@@ -34,7 +34,6 @@ SparkleFormation.new('db_app').load(:base).overrides do
   dynamic!(:launch_configuration, 'db',
            :image_id => 'ami-59a4a230',
            :instance_type => 'm1.small',
-           :key_name => 'sparkleinfrakey',
            :security_groups => [ ref!(:db_security_group) ]
   )
 
@@ -47,7 +46,6 @@ SparkleFormation.new('db_app').load(:base).overrides do
   dynamic!(:launch_configuration, 'app',
            :image_id => 'ami-59a4a230',
            :instance_type => 'm1.small',
-           :key_name => 'sparkleinfrakey',
            :security_groups => [ ref!(:app_security_group) ]
   )
 

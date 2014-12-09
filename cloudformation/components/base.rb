@@ -1,6 +1,10 @@
 SparkleFormation.build do
   set!('AWSTemplateFormatVersion', '2010-09-09')
 
+  mappings.key_map do
+    set!('global', :key_name => 'sparkleinfrakey')
+  end
+
   resources.cfn_user do
     type 'AWS::IAM::User'
     properties.path '/'

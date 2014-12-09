@@ -4,13 +4,11 @@
 # Config:
 #   :image_id as string
 #   :instance_type as string
-#   :key_name as string
 #   :security_groups as array of ref!s
 #
 # Parameters:
 #   image_id as string
 #   instance_type as string
-#   key_name as string
 #   security_groups as comma delimited list
 #
 # Outputs:
@@ -36,18 +34,12 @@ SparkleFormation.dynamic(:launch_configuration) do |_name, _config={}|
     default _config[:instance_type] || 'm1.small'
   end 
 
-  parameters("#{_name}_launch_configuration_key_name".to_sym) do
-    type 'String'
-    description "KeyName for #{ lc_name }"
-    default _config[:key_name] || 'sparkleinfrakey'
-  end
-
   resources(lc_name) do
     type 'AWS::AutoScaling::LaunchConfiguration'
     properties do
       image_id ref!("#{_name}_launch_configuration_image_id".to_sym)
       instance_type ref!("#{_name}_launch_configuration_instance_type".to_sym)
-      key_name ref!("#{_name}_launch_configuration_key_name".to_sym)
+      key_name _config[:key_name] || map!(:key_map, 'global', :key_name)
       security_groups _config[:security_groups] || []
       user_data base64!(
                         join!(
