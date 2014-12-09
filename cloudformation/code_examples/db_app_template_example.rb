@@ -57,16 +57,13 @@ SparkleFormation.new('db_app').load(:base).overrides do
   # Create the db asg
   dynamic!(:auto_scaling_group, 'db',
            :launch_configuration_name => ref!(:app_launch_configuration),
-           :max_size => 3,
-           :min_size => 2
+           :size => 2
   )
 
   # Create the app asg
   dynamic!(:auto_scaling_group, 'app',
            :launch_configuration_name => ref!(:db_launch_configuration),
-           :max_size => 3,
-           :min_size => 2,
-           :load_balancer_names => [ 'sparkle-doc-elb' ]
+           :size => 2
   )
 
 end
