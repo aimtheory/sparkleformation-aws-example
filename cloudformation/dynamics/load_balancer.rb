@@ -36,6 +36,7 @@
 #   #{_name}_load_balancer_unhealthy_threshold as number
 #   #{_name}_load_balancer_interval as number
 #   #{_name}_load_balancer_timeout as number
+#   #{_name}_load_balancer_name as string
 
 SparkleFormation.dynamic(:load_balancer) do |_name, _config={}|
 
@@ -121,6 +122,11 @@ SparkleFormation.dynamic(:load_balancer) do |_name, _config={}|
         timeout _config[:timeout] || ref!("#{_name}_load_balancer_timeout".to_sym)
       end
     end
+  end
+
+  outputs("#{_name}_load_balancer_name".to_sym) do
+    description 'Name of the LoadBalancer resource'
+    value lb_name
   end
 
   outputs("#{_name}_load_balancer_port".to_sym) do
