@@ -36,7 +36,7 @@ SparkleFormation.dynamic(:auto_scaling_group) do |_name, _config={}|
       max_size ref!("#{_name}_auto_scaling_group_size".to_sym)
       min_size ref!("#{_name}_auto_scaling_group_size".to_sym)
       desired_capacity ref!("#{_name}_auto_scaling_group_size".to_sym)
-      load_balancer_names ref!("#{_name}_load_balancer_name".to_sym).join(",")
+      load_balancer_names [ ref!("#{_name}_load_balancer_name".to_sym) ]
     end
     creation_policy do
       resource_signal do
