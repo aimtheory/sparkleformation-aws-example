@@ -1,8 +1,10 @@
 SparkleFormation.build do
   set!('AWSTemplateFormatVersion', '2010-09-09')
 
-  mappings.key_map do
-    set!('global', :key_name => 'sparkleinfrakey')
+  parameters.key_name do
+    type 'String'
+    description 'KeyName to use with LaunchConfiguration resource'
+    default 'sparkleinfrakey'
   end
 
   resources.cfn_user do
