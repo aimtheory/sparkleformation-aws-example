@@ -35,6 +35,12 @@ SparkleFormation.dynamic(:launch_configuration) do |_name, _config={}|
       default _config[:instance_type] || 'm1.small'
     end
 
+    # set!("#{lc_name}_security_group".to_sym) do
+    #   type 'String'
+    #   description "SecurityGroup for the LaunchConfiguration resource"
+    #   default 'default'
+    # end
+
   end
 
   resources(lc_name.to_sym) do
@@ -43,7 +49,7 @@ SparkleFormation.dynamic(:launch_configuration) do |_name, _config={}|
       image_id ref!("#{lc_name}_image_id".to_sym)
       instance_type ref!("#{lc_name}_instance_type".to_sym)
       key_name _config[:key_name] || ref!(:key_name)
-      security_groups _config[:security_groups] || []
+      security_groups [ _config[:security_group] ] || []
       user_data base64!(
                         join!(
                               "#!/bin/bash\n",
@@ -53,16 +59,16 @@ SparkleFormation.dynamic(:launch_configuration) do |_name, _config={}|
                               ref!('AWS::Region'),
                               " -s ",
                               ref!('AWS::StackName'),
-                              " -r #{ _process_key(lc_name) }",
+                              " -r #{ _process_key(lc_name.to_sym) }",
                               # " --access-key ",
                               # ref!(:cfn_keys),
                               # " --secret-key ",
                               # attr!(:cfn_keys, :secret_access_key),
                               "\n",
-                              "cfn-signal -e $? --stack ",
+                              "cfn-signal -e 0 --stack ",
                               ref!("AWS::StackName"),
                               " --resource ",
-                              _process_key("#{_name}_auto_scaling_group")
+                              _process_key("#{_name}_auto_scaling_group".to_sym)
                               )
                         )
     end
@@ -70,12 +76,12 @@ SparkleFormation.dynamic(:launch_configuration) do |_name, _config={}|
 
   outputs do
 
-    image_id do
+    set!("#{lc_name}_image_id".to_sym) do
       description "The ImageID for the LaunchConfiguration resource"
       value ref!("#{lc_name}_image_id".to_sym)
     end
 
-    instance_type do
+    set!("#{lc_name}_instance_type".to_sym)do
       description "The InstanceType for the LaunchConfiguration resource"
       value ref!("#{lc_name}_instance_type".to_sym)
     end
@@ -84,6 +90,11 @@ SparkleFormation.dynamic(:launch_configuration) do |_name, _config={}|
       description 'The KeyName for the LaunchConfiguration resource'
       value _config[:key_name] || ref!(:key_name)
     end
+
+    # set!("#{lc_name}_security_group".to_sym)do
+    #   description "The SecurityGroup for the LaunchConfiguration resource"
+    #   value ref!("#{lc_name}_security_group".to_sym)
+    # end
 
   end
 
