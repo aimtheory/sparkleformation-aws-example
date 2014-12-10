@@ -8,7 +8,6 @@
 #
 # Outputs:
 #   none
-
 SparkleFormation.dynamic(:security_group) do |_name, _config={}|
 
   sg_name = "#{_name}_security_group"
@@ -22,7 +21,7 @@ SparkleFormation.dynamic(:security_group) do |_name, _config={}|
   end
 
   # Create the SSH ingress rule for the security group
-  resources("#{sg_name}_ingress".to_sym) do
+  resources("#{sg_name}_ssh_ingress".to_sym) do
     type 'AWS::EC2::SecurityGroupIngress'
     properties do
       from_port 22
