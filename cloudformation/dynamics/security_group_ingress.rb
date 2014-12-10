@@ -43,30 +43,25 @@ SparkleFormation.dynamic(:security_group_ingress) do |_name, _config={}|
       to_port ref!("#{sgi_name}_port".to_sym)
       ip_protocol ref!("#{sgi_name}_ip_protocol".to_sym)
       group_name _config[:group_name]
-      source_security_group_name _config[:source_security_group_name]
+      if _config[:cidr_ip] then
+        cidr_ip _config[:cidr_ip]
+      else
+        source_security_group_name _config[:source_group_name]
+      end
     end
   end
 
   outputs do
-    port do
+    set!("#{sgi_name}_port".to_sym) do
       description "The Port number for the SecurityGroupIngress rule"
       value ref!("#{sgi_name}_port".to_sym)
     end
 
-    ip_protocol do
+    set!("#{sgi_name}_ip_protocol".to_sym) do
       description "The IpProtocol for the SecurityGroupIngress rule"
       value ref!("#{sgi_name}_ip_protocol".to_sym)
     end
 
-    group_name do
-      description "The GroupName for the SecurityGroupIngress rule"
-      value _config[:group_name]
-    end
-
-    source_security_group_name do
-      description "The SourceSecurityGroupName for the SecurityGroupIngress rule"
-      value _config[:source_security_group_name]
-    end
   end
 
 end
