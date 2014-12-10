@@ -7,7 +7,7 @@ SparkleFormation::Registry.register(:mysql_install) do
     _camel_keys_set(:auto_disable)
     config do
       commands('mysql_install') do
-        command 'sudo apt-get install mysql_server -y'
+        command 'sudo apt-get install mysql-server -y && service mysql start'
         test 'test ! -d /etc/mysql'
       end
     end

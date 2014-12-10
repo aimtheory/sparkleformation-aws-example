@@ -7,7 +7,7 @@ SparkleFormation::Registry.register(:nginx_install) do
     _camel_keys_set(:auto_disable)
     config do
       commands('nginx_install') do
-        command 'sudo apt-get install nginx -y'
+        command 'sudo apt-get install nginx -y && service nginx start'
         test 'test ! -d /etc/nginx'
       end
     end
