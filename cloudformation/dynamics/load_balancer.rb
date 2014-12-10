@@ -2,7 +2,6 @@
 # Description: Creates an AWS::ElasticLoadBalancing::LoadBalancer
 # resource
 # Config:
-#   :security_groups as array
 #   :port as number
 #   :protocol as string
 #   :instance_port as number 
@@ -14,7 +13,6 @@
 #   :timeout as number
 #
 # Parameters:   
-#   #{lb_name}_security_groups as comma delimited list
 #   #{lb_name}_port as number
 #   #{lb_name}_protocol as string
 #   #{lb_name}_instance_port as number
@@ -26,7 +24,6 @@
 #   #{lb_name}_timeout as number
 #
 # Outputs: (as ref!s to the parameters' user defined values)   
-#   security_groups as comma delimited list
 #   port as number
 #   protocol as string
 #   instance_port as number
@@ -43,12 +40,6 @@ SparkleFormation.dynamic(:load_balancer) do |_name, _config={}|
   lb_name = "#{_name}_load_balancer"
 
   parameters do
-
-    set!("#{lb_name}_security_groups".to_sym) do
-      type 'CommaDelimitedList'
-      description 'List of SecurityGroups for the LoadBalancer resource'
-      default _config[:security_groups] || 'default'
-    end
 
     set!("#{lb_name}_port".to_sym) do
       type 'Number'
@@ -129,9 +120,9 @@ SparkleFormation.dynamic(:load_balancer) do |_name, _config={}|
   end
 
   outputs do
-    load_balancer_resource_name do
+    set!("#{_name}_auto_scaling_group_load_balancer_resource_name".to_sym) do
       description 'Name of the LoadBalancer resource'
-      value ref!(lb_name)
+      value ref!(lb_name.to_sym)
     end
 
     port do
