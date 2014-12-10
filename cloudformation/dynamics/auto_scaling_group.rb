@@ -1,42 +1,46 @@
 # Dynamic: auto_scaling_group
 # Description: Creates an AWS::AutoScaling::AutoScalingGroup resource
-# Parameters:
-#   #{_name}_auto_scaling_size
-#
 # Config: 
 #   :launch_configuration_name as ref!
 #   :size as number
 #
+# Parameters:
+#   #{asg_name}_size
+#
 # Outputs:
-#   #{_name}_auto_scaling_group_size
+#   #{asg_name}_size
 
 SparkleFormation.dynamic(:auto_scaling_group) do |_name, _config={}|
 
-  asg_name = "#{_name}_auto_scaling_group".to_sym 
+  asg_name = "#{_name}_auto_scaling_group"
 
-  parameters("#{_name}_auto_scaling_group_size".to_sym) do
-    type 'Number'
-    description "Number of desired nodes for #{ asg_name }"
-    default _config[:size]
+  parameters do
+
+    set!("#{asg_name}_size".to_sym) do
+      type 'Number'
+      description "Number of desired nodes for the AutoScalingGroup resource"
+      default _config[:size]
+    end
+
+    # Add a load balancer using --apply-stack and output from a
+    # load_balancer stack
+    load_balancer_resource_name do
+      type 'String'
+      description 'The AWS::ElasticLoadBalancing::LoadBalancer resource name to associate this AutoScalingGroup with'
+      default 'LOAD_BALANCER_NAME_HERE'
+    end
+
   end
 
-  # Add a load balancer using --apply-stack and output from a
-  # load_balancer stack
-  parameters("#{_name}_load_balancer_name".to_sym) do
-    type 'String'
-    description 'The load balancer resource name to associate this AutoScalingGroup with'
-    default nil
-  end
-
-  resources(asg_name) do
+  resources(asg_name.to_sym) do
     type 'AWS::AutoScaling::AutoScalingGroup'
     properties do
       availability_zones._set('Fn::GetAZs', '')
       launch_configuration_name _config[:launch_configuration_name]
-      max_size ref!("#{_name}_auto_scaling_group_size".to_sym)
-      min_size ref!("#{_name}_auto_scaling_group_size".to_sym)
-      desired_capacity ref!("#{_name}_auto_scaling_group_size".to_sym)
-      load_balancer_names [ ref!("#{_name}_load_balancer_name".to_sym) ]
+      max_size ref!("#{asg_name}_size".to_sym)
+      min_size ref!("#{asg_name}_size".to_sym)
+      desired_capacity ref!("#{asg_name}_size".to_sym)
+      load_balancer_names [ ref!(:load_balancer_resource_name) ]
     end
     creation_policy do
       resource_signal do
@@ -46,18 +50,13 @@ SparkleFormation.dynamic(:auto_scaling_group) do |_name, _config={}|
     end
   end
 
-  outputs("#{_name}_auto_scaling_group_max_size".to_sym) do
-    description "The MaxSize for the #{ asg_name } AutoScalingGroup"
-    value ref!("#{_name}_auto_scaling_group_size".to_sym)
+  outputs do
+
+    size do
+      description "The desired size of the AutoScalingGroup"
+      value ref!("#{asg_name}_size".to_sym)
+    end
+
   end
 
-  outputs("#{_name}_auto_scaling_group_min_size".to_sym) do
-    description "The MinSize for the #{ asg_name } AutoScalingGroup"
-    value ref!("#{_name}_auto_scaling_group_size".to_sym)
-  end
-
-  outputs("#{_name}_auto_scaling_group_desired_capacity".to_sym) do
-    description "The DesiredCapacity for the #{ asg_name } AutoScalingGroup"
-    value ref!("#{_name}_auto_scaling_group_size".to_sym)
-  end
 end

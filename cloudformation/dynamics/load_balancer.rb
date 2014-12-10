@@ -14,164 +14,171 @@
 #   :timeout as number
 #
 # Parameters:   
-#   #{_name}_load_balancer_security_groups as comma delimited list
-#   #{_name}_load_balancer_port as number
-#   #{_name}_load_balancer_protocol as string
-#   #{_name}_load_balancer_instance_port as number
-#   #{_name}_load_balancer_instance_protocol as string
-#   #{_name}_load_balancer_target as string
-#   #{_name}_load_balancer_healthy_threshold as number
-#   #{_name}_load_balancer_unhealthy_threshold as number
-#   #{_name}_load_balancer_interval as number
-#   #{_name}_load_balancer_timeout as number
+#   #{lb_name}_security_groups as comma delimited list
+#   #{lb_name}_port as number
+#   #{lb_name}_protocol as string
+#   #{lb_name}_instance_port as number
+#   #{lb_name}_instance_protocol as string
+#   #{lb_name}_target as string
+#   #{lb_name}_healthy_threshold as number
+#   #{lb_name}_unhealthy_threshold as number
+#   #{lb_name}_interval as number
+#   #{lb_name}_timeout as number
 #
 # Outputs: (as ref!s to the parameters' user defined values)   
-#   #{_name}_load_balancer_security_groups as comma delimited list
-#   #{_name}_load_balancer_port as number
-#   #{_name}_load_balancer_protocol as string
-#   #{_name}_load_balancer_instance_port as number
-#   #{_name}_load_balancer_instance_protocol as string
-#   #{_name}_load_balancer_target as string
-#   #{_name}_load_balancer_healthy_threshold as number
-#   #{_name}_load_balancer_unhealthy_threshold as number
-#   #{_name}_load_balancer_interval as number
-#   #{_name}_load_balancer_timeout as number
-#   #{_name}_load_balancer_name as string
+#   security_groups as comma delimited list
+#   port as number
+#   protocol as string
+#   instance_port as number
+#   instance_protocol as string
+#   target as string
+#   healthy_threshold as number
+#   unhealthy_threshold as number
+#   interval as number
+#   timeout as number
+#   name as string
 
 SparkleFormation.dynamic(:load_balancer) do |_name, _config={}|
 
-  lb_name = "#{_name}_load_balancer".to_sym
+  lb_name = "#{_name}_load_balancer"
 
-  parameters("#{_name}_load_balancer_security_groups".to_sym) do
-    type 'CommaDelimitedList'
-    description 'List of SecurityGroups for the LoadBalancer resource'
-    default _config[:security_groups] || 'default'
+  parameters do
+
+    set!("#{lb_name}_security_groups".to_sym) do
+      type 'CommaDelimitedList'
+      description 'List of SecurityGroups for the LoadBalancer resource'
+      default _config[:security_groups] || 'default'
+    end
+
+    set!("#{lb_name}_port".to_sym) do
+      type 'Number'
+      description 'Listening port for the LoadBalancer resource'
+      default _config[:port] || '80'
+    end
+
+    set!("#{lb_name}_protocol".to_sym) do
+      type 'String'
+      description 'Protocol for the listener of the LoadBalancer resource'
+      default _config[:protocol] || 'tcp'
+    end
+
+    set!("#{lb_name}_instance_port".to_sym) do
+      type 'Number'
+      description 'InstancePort for the listener of the LoadBalancer resource'
+      default _config[:instance_port] || '80'
+    end
+
+    set!("#{lb_name}_instance_protocol".to_sym) do
+      type 'String'
+      description 'InstanceProtocol for the listener of the LoadBalancer resource'
+      default _config[:instance_protocol] || 'tcp'
+    end
+
+    set!("#{lb_name}_target".to_sym) do
+      type 'String'
+      description 'HealthCheck Target for the LoadBalancer resource'
+      default _config[:target] || 'HTTP:80/'
+    end
+
+    set!("#{lb_name}_healthy_threshold".to_sym) do
+      type 'Number'
+      description 'HealthCheck HealthyThreshold for the LoadBalancer resource'
+      default _config[:healthy_threshold] || '3'
+    end
+
+    set!("#{lb_name}_unhealthy_threshold".to_sym) do
+      type 'Number'
+      description 'HealthCheck UnHealthyThreshold for the LoadBalancer resource'
+      default _config[:unhealthy_threshold] || '3'
+    end
+
+    set!("#{lb_name}_interval".to_sym) do
+      type 'Number'
+      description 'HealthCheck Interval for the LoadBalancer resource'
+      default _config[:interval] || '10'
+    end
+
+    set!("#{lb_name}_timeout".to_sym) do
+      type 'Number'
+      description 'HealthCheck Timeout for the LoadBalancer resource'
+      default _config[:timeout] || '8'
+    end
+
   end
 
-  parameters("#{_name}_load_balancer_port".to_sym) do
-    type 'Number'
-    description 'Listening port for the LoadBalancer resource'
-    default _config[:port] || '80'
-  end
-
-  parameters("#{_name}_load_balancer_protocol".to_sym) do
-    type 'String'
-    description 'Protocol for the listener of the LoadBalancer resource'
-    default _config[:protocol] || 'tcp'
-  end
-
-  parameters("#{_name}_load_balancer_instance_port".to_sym) do
-    type 'Number'
-    description 'InstancePort for the listener of the LoadBalancer resource'
-    default _config[:instance_port] || '80'
-  end
-
-  parameters("#{_name}_load_balancer_instance_protocol".to_sym) do
-    type 'String'
-    description 'InstanceProtocol for the listener of the LoadBalancer resource'
-    default _config[:instance_protocol] || 'tcp'
-  end
-
-  parameters("#{_name}_load_balancer_target".to_sym) do
-    type 'String'
-    description 'HealthCheck Target for the LoadBalancer resource'
-    default _config[:target] || 'HTTP:80/'
-  end
-
-  parameters("#{_name}_load_balancer_healthy_threshold".to_sym) do
-    type 'Number'
-    description 'HealthCheck HealthyThreshold for the LoadBalancer resource'
-    default _config[:healthy_threshold] || '3'
-  end
-
-  parameters("#{_name}_load_balancer_unhealthy_threshold".to_sym) do
-    type 'Number'
-    description 'HealthCheck UnHealthyThreshold for the LoadBalancer resource'
-    default _config[:unhealthy_threshold] || '3'
-  end
-
-  parameters("#{_name}_load_balancer_interval".to_sym) do
-    type 'Number'
-    description 'HealthCheck Interval for the LoadBalancer resource'
-    default _config[:interval] || '10'
-  end
-
-  parameters("#{_name}_load_balancer_timeout".to_sym) do
-    type 'Number'
-    description 'HealthCheck Timeout for the LoadBalancer resource'
-    default _config[:timeout] || '8'
-  end
-
-  resources(lb_name) do
+  resources(lb_name.to_sym) do
     type 'AWS::ElasticLoadBalancing::LoadBalancer'
     properties do
       availability_zones._set('Fn::GetAZs', '')
       listeners _array(
         -> {
-          load_balancer_port _config[:port] || ref!("#{_name}_load_balancer_port".to_sym)
-          protocol _config[:protocol] || ref!("#{_name}_load_balancer_protocol".to_sym)
-          instance_port _config[:instance_port] || ref!("#{_name}_load_balancer_instance_port".to_sym)
-          instance_protocol _config[:instance_protocol] || ref!("#{_name}_load_balancer_instance_protocol".to_sym)
+          load_balancer_port _config[:port] || ref!("#{lb_name}_port".to_sym)
+          protocol _config[:protocol] || ref!("#{lb_name}_protocol".to_sym)
+          instance_port _config[:instance_port] || ref!("#{lb_name}_instance_port".to_sym)
+          instance_protocol _config[:instance_protocol] || ref!("#{lb_name}_instance_protocol".to_sym)
         }
       )
       health_check do
-        target _config[:target] || ref!("#{_name}_load_balancer_target".to_sym)
-        healthy_threshold _config[:healthy_threshold] || ref!("#{_name}_load_balancer_healthy_threshold".to_sym)
-        unhealthy_threshold _config[:unhealthy_threshold] || ref!("#{_name}_load_balancer_unhealthy_threshold".to_sym)
-        interval _config[:interval] || ref!("#{_name}_load_balancer_interval".to_sym)
-        timeout _config[:timeout] || ref!("#{_name}_load_balancer_timeout".to_sym)
+        target _config[:target] || ref!("#{lb_name}_target".to_sym)
+        healthy_threshold _config[:healthy_threshold] || ref!("#{lb_name}_healthy_threshold".to_sym)
+        unhealthy_threshold _config[:unhealthy_threshold] || ref!("#{lb_name}_unhealthy_threshold".to_sym)
+        interval _config[:interval] || ref!("#{lb_name}_interval".to_sym)
+        timeout _config[:timeout] || ref!("#{lb_name}_timeout".to_sym)
       end
     end
   end
 
-  outputs("#{_name}_load_balancer_name".to_sym) do
-    description 'Name of the LoadBalancer resource'
-    value lb_name
-  end
+  outputs do
+    load_balancer_resource_name do
+      description 'Name of the LoadBalancer resource'
+      value ref!(lb_name)
+    end
 
-  outputs("#{_name}_load_balancer_port".to_sym) do
-    description 'Listening port for the LoadBalancer resource'
-    value ref!("#{_name}_load_balancer_port".to_sym)
-  end
+    port do
+      description 'Listening port for the LoadBalancer resource'
+      value ref!("#{lb_name}_port".to_sym)
+    end
 
-  outputs("#{_name}_load_balancer_protocol".to_sym) do
-    description 'Protocal for the listener of the LoadBalancer resource'
-    value ref!("#{_name}_load_balancer_protocol".to_sym)
-  end
+    protocol do
+      description 'Protocal for the listener of the LoadBalancer resource'
+      value ref!("#{lb_name}_protocol".to_sym)
+    end
 
-  outputs("#{_name}_load_balancer_instance_port".to_sym) do
-    description 'InstancePort for the listener of the LoadBalancer resource'
-    value ref!("#{_name}_load_balancer_instance_port".to_sym)
-  end
+    instance_port do
+      description 'InstancePort for the listener of the LoadBalancer resource'
+      value ref!("#{lb_name}_instance_port".to_sym)
+    end
 
-  outputs("#{_name}_load_balancer_instance_protocol".to_sym) do
-    description 'InstanceProtocol for the listener of the LoadBalancer resource'
-    value ref!("#{_name}_load_balancer_instance_protocol".to_sym)
-  end
+    instance_protocol do
+      description 'InstanceProtocol for the listener of the LoadBalancer resource'
+      value ref!("#{lb_name}_instance_protocol".to_sym)
+    end
 
-  outputs("#{_name}_load_balancer_target".to_sym) do
-    description 'HealthCheck Target for the LoadBalancer resource'
-    value ref!("#{_name}_load_balancer_target".to_sym)
-  end
+    target do
+      description 'HealthCheck Target for the LoadBalancer resource'
+      value ref!("#{lb_name}_target".to_sym)
+    end
 
-  outputs("#{_name}_load_balancer_healthy_threshold".to_sym) do
-    description 'HealthCheck HealthyThreshold for the LoadBalancer resource'
-    value ref!("#{_name}_load_balancer_healthy_threshold".to_sym)
-  end
+    healthy_threshold do
+      description 'HealthCheck HealthyThreshold for the LoadBalancer resource'
+      value ref!("#{lb_name}_healthy_threshold".to_sym)
+    end
 
-  outputs("#{_name}_load_balancer_unhealthy_threshold".to_sym) do
-    description 'HealthCheck UnHealthyThreshold for the LoadBalancer resource'
-    value ref!("#{_name}_load_balancer_unhealthy_threshold".to_sym)
-  end
+    unhealthy_threshold do
+      description 'HealthCheck UnHealthyThreshold for the LoadBalancer resource'
+      value ref!("#{lb_name}_unhealthy_threshold".to_sym)
+    end
 
-  outputs("#{_name}_load_balancer_interval".to_sym) do
-    description 'HealthCheck Interval for the LoadBalancer resource'
-    value ref!("#{_name}_load_balancer_interval".to_sym)
-  end
+    interval do
+      description 'HealthCheck Interval for the LoadBalancer resource'
+      value ref!("#{lb_name}_interval".to_sym)
+    end
 
-  outputs("#{_name}_load_balancer_timeout".to_sym) do
-    description 'HealthCheck Timeout for the LoadBalancer resource'
-    value ref!("#{_name}_load_balancer_timeout".to_sym)
+    timeout do
+      description 'HealthCheck Timeout for the LoadBalancer resource'
+      value ref!("#{lb_name}_timeout".to_sym)
+    end
+
   end
 
 end
