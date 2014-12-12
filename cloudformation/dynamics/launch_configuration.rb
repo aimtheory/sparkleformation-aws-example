@@ -43,6 +43,10 @@ SparkleFormation.dynamic(:launch_configuration) do |_name, _config={}|
 
   end
 
+  resources("#{_name}_launch_wait_handle".to_sym) do
+    type 'AWS::CloudFormation::WaitConditionHandle'
+  end
+
   resources(lc_name.to_sym) do
     type 'AWS::AutoScaling::LaunchConfiguration'
     properties do
@@ -65,10 +69,10 @@ SparkleFormation.dynamic(:launch_configuration) do |_name, _config={}|
                               # " --secret-key ",
                               # attr!(:cfn_keys, :secret_access_key),
                               "\n",
-                              "cfn-signal -e 0 --stack ",
+                              "cfn-signal -e $? --stack ",
                               ref!("AWS::StackName"),
                               " --resource ",
-                              _process_key("#{_name}_auto_scaling_group".to_sym)
+                              ref!("#{_name}_launch_wait_handle".to_sym)
                               )
                         )
     end
