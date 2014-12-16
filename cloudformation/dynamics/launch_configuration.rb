@@ -61,7 +61,7 @@ SparkleFormation.dynamic(:launch_configuration) do |_name, _config={}|
                               "\n",
                               "cfn-signal -e $? --stack ",
                               ref!("AWS::StackName"),
-                              " -r 'cfn-init Failed' '",
+                              " '",
                               ref!("#{_name}_launch_wait_handle".to_sym),
                               "'\n"
                               )
