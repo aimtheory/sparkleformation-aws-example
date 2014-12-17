@@ -74,13 +74,13 @@ SparkleFormation.dynamic(:load_balancer) do |_name, _config={}|
     set!("#{lb_name}_healthy_threshold".to_sym) do
       type 'Number'
       description 'HealthCheck HealthyThreshold for the LoadBalancer resource'
-      default _config[:healthy_threshold] || '3'
+      default _config[:healthy_threshold] || '2'
     end
 
     set!("#{lb_name}_unhealthy_threshold".to_sym) do
       type 'Number'
       description 'HealthCheck UnHealthyThreshold for the LoadBalancer resource'
-      default _config[:unhealthy_threshold] || '3'
+      default _config[:unhealthy_threshold] || '2'
     end
 
     set!("#{lb_name}_interval".to_sym) do
