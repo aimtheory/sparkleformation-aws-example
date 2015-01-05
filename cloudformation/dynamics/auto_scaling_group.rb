@@ -34,6 +34,16 @@ SparkleFormation.dynamic(:auto_scaling_group) do |_name, _config={}|
 
   end
 
+  resources("#{asg_name}_launch_wait_condition".to_sym) do
+    type 'AWS::CloudFormation::WaitCondition'
+    depends_on _process_key(asg_name.to_sym)
+    properties do
+      count ref!("#{asg_name}_size".to_sym)
+      handle ref!("#{_name}_launch_wait_handle".to_sym)
+      timeout '1800'
+    end
+  end
+
   resources(asg_name.to_sym) do
     type 'AWS::AutoScaling::AutoScalingGroup'
     properties do
@@ -44,12 +54,6 @@ SparkleFormation.dynamic(:auto_scaling_group) do |_name, _config={}|
       desired_capacity ref!("#{asg_name}_size".to_sym)
       if _config[:load_balance] == true then
         load_balancer_names [ ref!("#{asg_name}_load_balancer_resource_name".to_sym) ]
-      end
-    end
-    creation_policy do
-      resource_signal do
-        count 1
-        timeout "PT10M"
       end
     end
   end
