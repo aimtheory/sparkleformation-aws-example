@@ -63,7 +63,7 @@ To create our ELB stack, do:
 knife cloudformation create my-sf-elb --processing
 ```
 
-Then choose `1` from the first menu, and then `6` to deploy the `app_load_balancer` template to the AWS CloudFormation API. You'll be prompted for several values. For this demonstration, you can just accept all the default values. If you change these, you'll just have to make sure that you make the corresponding changes when you deploy the application stack. Let's move on to that.
+Then choose `1` from the first menu, and then `2` to deploy the `app_load_balancer` template to the AWS CloudFormation API. You'll be prompted for several values. For this demonstration, you can just accept all the default values. If you change these, you'll just have to make sure that you make the corresponding changes when you deploy the application stack. Let's move on to that.
 
 ## The Base [Component](https://github.com/sparkleformation/sparkle_formation/blob/master/docs/building-blocks.md#components)
 The first piece we're going to put together is a static [*component*](https://github.com/sparkleformation/sparkle_formation/blob/master/docs/building-blocks.md#components) which will contain info/data that we'll want to be the same across _many_ CloudFormation stacks we build. Since I want this walkthrough to stay up to date with the changes to files in this repo, I'm not embedding code examples here, I'll link to them in the repo.
@@ -104,7 +104,7 @@ To do this, we at least need the name of the ELB stack we created earlier, which
 knife cloudformation create my-app-stack --processing --apply-stack my-sf-elb
 ```
 
-You'll know that this magic "apply" is working when you accept all the defaults and get to the last one. The default value you're shown for the `My App Stack Load Balancer Resource Name` parameter should automatically have the correct name for your ELB. This value was found as an output of your `my-sf-elb` and passed to the parameter of the same name in your application stack. Just press enter to accept it. 
+Choose `1` and then `1`. You'll know that this magic "apply" is working when you accept all the defaults and get to the last one. The default value you're shown for the `My App Stack Load Balancer Resource Name` parameter should automatically have the correct name for your ELB. This value was found as an output of your `my-sf-elb` and passed to the parameter of the same name in your application stack. Just press enter to accept it. 
 
 When your app stack comes up successfully, you should have two instances for each of your `app` and `db` AutoScaling groups with the `app` ASG load balanced. The app instances should also be able to access the db nodes on their private IP addresses on port 3306.
 
