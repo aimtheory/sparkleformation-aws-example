@@ -13,19 +13,21 @@ We'll create the stack that contains the ELB first and then we'll create the app
 
 While there is support forthcoming for provisioning without the `knife-cloudformation` gem, for this walkthrough we're going to [use that gem for provisioning](https://github.com/sparkleformation/sparkle_formation/blob/develop/docs/provisioning.md#knife-cloudformation-setuphttps://github.com/sparkleformation/sparkle_formation/blob/develop/docs/provisioning.md#knife-cloudformation-setup). `knife-cloudformation` is a [Chef](http://chef.io)-related tool that will provision to CloudFormation and can also use SparkleFormation templates to do so.
 
-Install the both the `knife-cloudformation` and `sparkle_formation` Ruby Gems by doing either of the following. Since the `knife-cloudformation` requires `sparkle_formation`, you'll get both.
+Install both the `knife-cloudformation` and `sparkle_formation` Ruby Gems by doing either of the following. Since the `knife-cloudformation` requires `sparkle_formation`, you'll get both.
+
+Execute the following:
 
 ```
 gem install knife-cloudformation
 ```
 
-or with Bundler by doing a `bundle install` with the following in your Gemfile:
+or with Bundler by doing a `bundle install` with the following in your `Gemfile`:
 
 ```
 gem 'knife-cloudformation'
 ```
 
-Assuming you have your AWS credentials already loaded into your environment, add the following to your `.chef/knife.rb`:
+Assuming you have your AWS credentials already loaded into your environment, make sure you have the following to your `.chef/knife.rb`: (it's already included in the repo)
 
 ```
 knife[:aws_access_key_id] = ENV['AWS_ACCESS_KEY_ID']
@@ -53,7 +55,7 @@ What are we doing here? Well, in the end we just want to produce one JSON file f
 
 # The ELB Stack
 
-Let's create our ELB stack. Our [*template* file is very simple](https://github.com/heavywater/sparkles-doc-testing/blob/master/cloudformation/code_examples/app_load_balancer.rb). It just has a description and a dynamic call which adds the `load_balancer` [*dynamic*](https://github.com/heavywater/sparkles-doc-testing/blob/master/cloudformation/dynamics/load_balancer.rb). This `load_balancer` dynamic is a reusable piece of code that allows you to deploy an ELB with user-defined parameters at deploy time, with optional defaults. It can be re-used with minimal effort to deploy many ELBs all with different configurations. This sure beats writing JSON multiple times for different ELB deployments or copy/pasting pieces from one JSON file into another.
+Let's create our ELB stack. Our [*template* file is very simple](https://github.com/heavywater/sparkles-doc-testing/blob/master/cloudformation/code_examples/app_load_balancer.rb). It just has a description and a dynamic call which adds the [`load_balancer` *dynamic*](https://github.com/heavywater/sparkles-doc-testing/blob/master/cloudformation/dynamics/load_balancer.rb). This `load_balancer` dynamic is a reusable piece of code that allows you to deploy an ELB with user-defined parameters at deploy time, with optional defaults. It can be re-used with minimal effort to deploy many ELBs all with different configurations. This sure beats writing JSON multiple times for different ELB deployments or copy/pasting pieces from one JSON file into another.
 
 To create our ELB stack, do:
 
