@@ -55,7 +55,7 @@ What are we doing here? Well, in the end we just want to produce one JSON file f
 
 # The ELB Stack
 
-Let's create our ELB stack. Our [*template* file is very simple](https://github.com/heavywater/sparkles-doc-testing/blob/master/cloudformation/code_examples/app_load_balancer.rb). It just has a description and a dynamic call which adds the [`load_balancer` *dynamic*](https://github.com/heavywater/sparkles-doc-testing/blob/master/cloudformation/dynamics/load_balancer.rb). This `load_balancer` dynamic is a reusable piece of code that allows you to deploy an ELB with user-defined parameters at deploy time, with optional defaults. It can be re-used with minimal effort to deploy many ELBs all with different configurations. This sure beats writing JSON multiple times for different ELB deployments or copy/pasting pieces from one JSON file into another.
+Let's create our ELB stack. Our [*template* file is very simple](cloudformation/code_examples/app_load_balancer.rb). It just has a description and a dynamic call which adds the [`load_balancer` *dynamic*](cloudformation/dynamics/load_balancer.rb). This `load_balancer` dynamic is a reusable piece of code that allows you to deploy an ELB with user-defined parameters at deploy time, with optional defaults. It can be re-used with minimal effort to deploy many ELBs all with different configurations. This sure beats writing JSON multiple times for different ELB deployments or copy/pasting pieces from one JSON file into another.
 
 To create our ELB stack, do:
 
@@ -73,26 +73,26 @@ So, [check out the only component in this implementation, called `base`](cloudfo
 ## The [Registries](https://github.com/sparkleformation/sparkle_formation/blob/master/docs/building-blocks.md#registries)
 We're going to create three [registries](https://github.com/sparkleformation/sparkle_formation/blob/master/docs/building-blocks.md#registries):
 
-* [`apt_get_update`](https://github.com/heavywater/sparkles-doc-testing/blob/master/cloudformation/registry/apt_get_update.rb)
-* [`mysql_install`](https://github.com/heavywater/sparkles-doc-testing/blob/master/cloudformation/registry/mysql_install.rb)
-* [`nginx_install`](https://github.com/heavywater/sparkles-doc-testing/blob/master/cloudformation/registry/nginx_install.rb)
+* [`apt_get_update`](cloudformation/registry/apt_get_update.rb)
+* [`mysql_install`](cloudformation/registry/mysql_install.rb)
+* [`nginx_install`](cloudformation/registry/nginx_install.rb)
 
 Pretty self-explanatory. We're going to use the `apt_get_update` registry for both AutoScaling groups and we'll use the `mysql_install` and the `nginx_install` registries for the database and application AutoScaling groups, respectively. You'll see how we use these below in the *template*. Once again, no copy pasta!
 
 ## The [Dynamics](https://github.com/sparkleformation/sparkle_formation/blob/master/docs/building-blocks.md#dynamics)
-A [*dynamic*](https://github.com/sparkleformation/sparkle_formation/blob/master/docs/building-blocks.md#dynamics) usually corresponds to one or more resources and is, again re-usable, but it is dynamic in the sense that you can deploy it with a unique configuration. You'll notice on the [first (non-commented) line of each dynamic's `do` statement](https://github.com/heavywater/sparkles-doc-testing/blob/master/cloudformation/dynamics/auto_scaling_group.rb#L13), there is an iterator called [`_config`](https://github.com/sparkleformation/sparkle_formation/blob/develop/docs/building-blocks.md#dynamics). Each dynamic can receive several values through this `_config` hash to create a unique configuration of a given resource. See the Template section below for how these dynamics are implemented.
+A [*dynamic*](https://github.com/sparkleformation/sparkle_formation/blob/master/docs/building-blocks.md#dynamics) usually corresponds to one or more resources and is, again re-usable, but it is dynamic in the sense that you can deploy it with a unique configuration. You'll notice on the [first (non-commented) line of each dynamic's `do` statement](cloudformation/dynamics/auto_scaling_group.rb#L13), there is an iterator called [`_config`](https://github.com/sparkleformation/sparkle_formation/blob/develop/docs/building-blocks.md#dynamics). Each dynamic can receive several values through this `_config` hash to create a unique configuration of a given resource. See the Template section below for how these dynamics are implemented.
 
 There are several re-usable dynamics that will compose our application stack:
 
-* [`auto_scaling_group`](https://github.com/heavywater/sparkles-doc-testing/blob/master/cloudformation/dynamics/auto_scaling_group.rb) - We'll re-use to create both of the `AWS::AutoScaling::AutoScalingGroup`resources in this implementation
-* [`launch_configuration`](https://github.com/heavywater/sparkles-doc-testing/blob/master/cloudformation/dynamics/launch_configuration.rb) - We'll re-use to create the `AWS::AutoScaling::LaunchConfiguration` resources that will be associated with each of the respective `AWS::AutoScaling::AutoScalingGroup` resources
-* [`security_group`](https://github.com/heavywater/sparkles-doc-testing/blob/master/cloudformation/dynamics/security_group.rb) - We'll re-use to create two different `AWS::EC2::SecurityGroup` resources
-* [`security_group_ingress`](https://github.com/heavywater/sparkles-doc-testing/blob/master/cloudformation/dynamics/security_group_ingress.rb) - We'll reuse to create the individual `AWS::EC2::SecurityGroupIngress` rules for each AWS `AWS::EC2::SecurityGroup` resource.
+* [`auto_scaling_group`](cloudformation/dynamics/auto_scaling_group.rb) - We'll re-use to create both of the `AWS::AutoScaling::AutoScalingGroup`resources in this implementation
+* [`launch_configuration`](cloudformation/dynamics/launch_configuration.rb) - We'll re-use to create the `AWS::AutoScaling::LaunchConfiguration` resources that will be associated with each of the respective `AWS::AutoScaling::AutoScalingGroup` resources
+* [`security_group`](cloudformation/dynamics/security_group.rb) - We'll re-use to create two different `AWS::EC2::SecurityGroup` resources
+* [`security_group_ingress`](cloudformation/dynamics/security_group_ingress.rb) - We'll reuse to create the individual `AWS::EC2::SecurityGroupIngress` rules for each AWS `AWS::EC2::SecurityGroup` resource.
 
 ## The Template
-Our [*template* is the "highest level" Sparkle](https://github.com/heavywater/sparkles-doc-testing/blob/master/cloudformation/code_examples/db_app_template_example.rb), if you will. It brings together all of the different aforementioned pieces. For example, take a look at [how the `launch_configuration` dynamic is implemented](https://github.com/heavywater/sparkles-doc-testing/blob/master/cloudformation/code_examples/db_app_template_example.rb#L39) in the template. If you are a Chef user, you may recognize the pattern. When the dynamic is called, it's given a name, `db` or `app`. Starting on the second line of that block, you'll see that there are several other values that are being passed in to the dynamic. As mentioned earlier, the dynamic then accesses these values through the `_config` hash iterator. This pattern is quite similar to how an LWRP is used in Chef. It is named dynamically and then certain attributes are passed to it for a unique deployment of the given resource.
+Our [*template* is the "highest level" Sparkle](cloudformation/code_examples/db_app_template_example.rb), if you will. It brings together all of the different aforementioned pieces. For example, take a look at [how the `launch_configuration` dynamic is implemented](cloudformation/code_examples/db_app_template_example.rb#L39) in the template. If you are a Chef user, you may recognize the pattern. When the dynamic is called, it's given a name, `db` or `app`. Starting on the second line of that block, you'll see that there are several other values that are being passed in to the dynamic. As mentioned earlier, the dynamic then accesses these values through the `_config` hash iterator. This pattern is quite similar to how an LWRP is used in Chef. It is named dynamically and then certain attributes are passed to it for a unique deployment of the given resource.
 
-Notice, too, that the [registries we created earlier are 'inserted' in the resource definitions](https://github.com/heavywater/sparkles-doc-testing/blob/master/cloudformation/code_examples/db_app_template_example.rb#L47) for each LaunchConfiguration.
+Notice, too, that the [registries we created earlier are 'inserted' in the resource definitions](cloudformation/code_examples/db_app_template_example.rb#L47) for each LaunchConfiguration.
 
 You can also note that when the `auto_scaling` group dynamic is being called to deploy both the `app` and `db` ASGs, the `launch_configuration_name` value being passed through `_config` is referencing the corresponding LaunchConfiguration for each ASG using the CloudFormation's `Ref` function. See [here for more on using CF functions in SparkleFormation](https://github.com/sparkleformation/sparkle_formation/blob/master/docs/functions.md#intrinsic-functions).
 
